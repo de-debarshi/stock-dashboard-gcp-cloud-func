@@ -32,14 +32,17 @@ exports.importBhavcopy = functions.https.onRequest(async (req, res) => {
         .on('data', (data) => {
           if (!data['SYMBOL']) return;
 
-          results.push({
-            symbol: data['SYMBOL'],
-            series: data['SERIES'],
-            open: parseFloat(data['OPEN_PRICE']),
-            high: parseFloat(data['HIGH_PRICE']),
-            low: parseFloat(data['LOW_PRICE']),
-            close: parseFloat(data['CLOSE_PRICE']),
-          });
+          let series = data['SERIES']?.trim();
+          if (series && series === 'EQ') {
+            results.push({
+              symbol: data['SYMBOL'],
+              series: series,
+              open: parseFloat(data['OPEN_PRICE']),
+              high: parseFloat(data['HIGH_PRICE']),
+              low: parseFloat(data['LOW_PRICE']),
+              close: parseFloat(data['CLOSE_PRICE']),
+            });
+          }
         })
         .on('end', resolve)
         .on('error', reject);
